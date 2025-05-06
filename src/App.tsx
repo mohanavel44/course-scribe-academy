@@ -12,6 +12,8 @@ import CourseDetailPage from "./pages/CourseDetailPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import NotFound from "./pages/NotFound";
+import PaymentPage from "./pages/PaymentPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 
 // Dashboard Pages
 import StudentDashboard from "./pages/dashboard/student/StudentDashboard";
@@ -37,6 +39,8 @@ const App = () => (
             <Route path="/courses/:courseId" element={<CourseDetailPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/payment-success" element={<PaymentSuccessPage />} />
             
             {/* Protected Routes */}
             <Route path="/dashboard/student" element={<StudentDashboard />} />

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -59,14 +58,9 @@ export default function CourseDetailPage() {
     setEnrolling(true);
     try {
       await enrollInCourse(user.id, course.id);
-      toast({
-        title: "Success!",
-        description: "You have successfully enrolled in this course.",
-      });
       
-      // Refresh course data to update enrollment count
-      const updatedCourse = await getCourseById(course.id);
-      setCourse(updatedCourse);
+      // Instead of showing a toast, redirect to the payment page
+      navigate('/payment', { state: { courseId: course.id } });
     } catch (error: any) {
       toast({
         title: "Enrollment Failed",
