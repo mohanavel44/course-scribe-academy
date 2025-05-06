@@ -28,7 +28,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Mock user data (this would be replaced with actual backend authentication)
-const mockUsers = [
+export const mockUsers = [
   {
     id: "1",
     email: "student@example.com",

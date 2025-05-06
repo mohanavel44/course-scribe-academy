@@ -151,7 +151,7 @@ export const cancelEnrollment = (userId: string, courseId: string): Promise<bool
   enrollment.updatedAt = new Date().toISOString();
   
   // If was confirmed, decrease the enrolled count
-  if (enrollment.status === "confirmed") {
+  if (enrollment.status === "confirmed" as EnrollmentStatus) {
     const course = mockCourses.find(c => c.id === courseId);
     if (course && course.enrolledCount > 0) {
       course.enrolledCount -= 1;
