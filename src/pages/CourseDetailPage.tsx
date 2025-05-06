@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/components/ui/use-toast';
 import { Clock, Calendar, Users, Star, CheckCircle2, BookOpen, AlertCircle } from 'lucide-react';
 import { Course } from '@/models/types';
-import { getCourseById, enrollInCourse } from '@/services/courseService';
+import { getCourseById, enrollInCourse, getUserEnrollments } from '@/services/courseService';
 import { useAuth } from '@/context/AuthContext';
 
 export default function CourseDetailPage() {
@@ -16,6 +16,7 @@ export default function CourseDetailPage() {
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [enrolling, setEnrolling] = useState(false);
+  const [isEnrolled, setIsEnrolled] = useState(false);
   const { toast } = useToast();
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -41,6 +42,25 @@ export default function CourseDetailPage() {
 
     fetchCourseDetails();
   }, [courseId, toast]);
+
+  useEffect(() => {
+    // Check if user is already enrolled in this course
+    const checkEnrollmentStatus = async () => {
+      if (!isAuthenticated || !user || !courseId) return;
+      
+      try {
+        const enrollments = await getUserEnrollments(user.id);
+        const enrolled = enrollments.some(
+          enrollment => enrollment.courseId === courseId && enrollment.status === "confirmed"
+        );
+        setIsEnrolled(enrolled);
+      } catch (error) {
+        console.error("Failed to check enrollment status:", error);
+      }
+    };
+    
+    checkEnrollmentStatus();
+  }, [courseId, user, isAuthenticated]);
 
   const handleEnrollment = async () => {
     if (!isAuthenticated) {
@@ -242,15 +262,25 @@ export default function CourseDetailPage() {
                 </div>
                 
                 <div className="space-y-4">
-                  <Button 
-                    className="w-full" 
-                    disabled={enrolling || isCourseFull}
-                    onClick={handleEnrollment}
-                  >
-                    {enrolling ? 'Processing...' : isCourseFull ? 'Join Waitlist' : 'Enroll Now'}
-                  </Button>
+                  {isEnrolled ? (
+                    <Button 
+                      className="w-full bg-green-600 hover:bg-green-700"
+                      disabled={true}
+                    >
+                      <CheckCircle2 className="w-4 h-4 mr-2" />
+                      Enrolled
+                    </Button>
+                  ) : (
+                    <Button 
+                      className="w-full" 
+                      disabled={enrolling || isCourseFull}
+                      onClick={handleEnrollment}
+                    >
+                      {enrolling ? 'Processing...' : isCourseFull ? 'Join Waitlist' : 'Enroll Now'}
+                    </Button>
+                  )}
                   
-                  {isCourseFull && (
+                  {isCourseFull && !isEnrolled && (
                     <div className="flex items-center justify-center text-amber-600 text-sm">
                       <AlertCircle className="w-4 h-4 mr-1" />
                       <span>Course is full. Join waitlist instead.</span>
@@ -258,7 +288,11 @@ export default function CourseDetailPage() {
                   )}
                   
                   <p className="text-center text-sm text-gray-500">
-                    {course.capacity - course.enrolledCount} spots left out of {course.capacity}
+                    {isEnrolled ? (
+                      "You are enrolled in this course"
+                    ) : (
+                      `${course.capacity - course.enrolledCount} spots left out of ${course.capacity}`
+                    )}
                   </p>
                 </div>
               </CardContent>

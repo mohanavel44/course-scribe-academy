@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -7,13 +6,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Calendar, Clock } from 'lucide-react';
 import { Course } from '@/models/types';
-import { getCourseById } from '@/services/courseService';
+import { getCourseById, enrollInCourse } from '@/services/courseService';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
 export default function PaymentSuccessPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -30,6 +31,17 @@ export default function PaymentSuccessPage() {
           throw new Error("Course not found");
         }
         setCourse(courseData);
+        
+        // If we have a user, ensure the enrollment is marked as confirmed
+        if (user && user.id) {
+          // This ensures the enrollment status is set to confirmed
+          try {
+            await enrollInCourse(user.id, state.courseId);
+          } catch (error) {
+            console.log("User is already enrolled in this course");
+            // This is fine, as this might be the case if the user has already enrolled
+          }
+        }
       } catch (error) {
         console.error("Failed to load course:", error);
         toast({
@@ -43,7 +55,7 @@ export default function PaymentSuccessPage() {
     };
     
     fetchCourse();
-  }, [state, navigate, toast]);
+  }, [state, navigate, toast, user]);
   
   if (loading) {
     return (
