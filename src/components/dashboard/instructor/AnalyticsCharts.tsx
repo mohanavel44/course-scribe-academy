@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { BarChart, PieChart, LineChart } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Bar, BarChart, Line, LineChart, Pie, PieChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Fragment } from "react";
 
 interface EnrollmentDataPoint {
@@ -40,14 +41,44 @@ export default function AnalyticsCharts({
         </CardHeader>
         <CardContent>
           <div className="h-80">
-            <LineChart 
-              data={enrollmentData}
-              categories={["value"]}
-              index="name"
-              valueFormatter={(value) => `${value} students`}
-              colors={["blue"]}
-              className="h-full"
-            />
+            <ChartContainer 
+              className="h-full" 
+              config={{
+                blue: { color: "#3b82f6" }
+              }}
+            >
+              <LineChart
+                data={enrollmentData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip 
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <ChartTooltipContent 
+                          active={active} 
+                          payload={payload}
+                          formatter={(value) => [`${value} students`]}
+                        />
+                      );
+                    }
+                    return null;
+                  }} 
+                />
+                <Legend />
+                <Line 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="var(--color-blue)" 
+                  strokeWidth={2} 
+                  dot={{ strokeWidth: 2 }} 
+                  activeDot={{ r: 8 }} 
+                />
+              </LineChart>
+            </ChartContainer>
           </div>
         </CardContent>
       </Card>
@@ -60,14 +91,37 @@ export default function AnalyticsCharts({
         </CardHeader>
         <CardContent>
           <div className="h-80">
-            <BarChart 
-              data={ratingData}
-              categories={["value"]}
-              index="name"
-              valueFormatter={(value) => `${value.toFixed(1)}/5.0`}
-              colors={["green"]}
-              className="h-full"
-            />
+            <ChartContainer 
+              className="h-full" 
+              config={{
+                green: { color: "#22c55e" }
+              }}
+            >
+              <BarChart
+                data={ratingData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis domain={[0, 5]} />
+                <Tooltip 
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <ChartTooltipContent 
+                          active={active} 
+                          payload={payload}
+                          formatter={(value) => [`${Number(value).toFixed(1)}/5.0`]}
+                        />
+                      );
+                    }
+                    return null;
+                  }} 
+                />
+                <Legend />
+                <Bar dataKey="value" fill="var(--color-green)" />
+              </BarChart>
+            </ChartContainer>
           </div>
         </CardContent>
       </Card>
@@ -80,14 +134,39 @@ export default function AnalyticsCharts({
         </CardHeader>
         <CardContent>
           <div className="h-80">
-            <BarChart 
-              data={completionData}
-              categories={["completed", "incomplete"]}
-              index="name"
-              valueFormatter={(value) => `${value}%`}
-              colors={["green", "red"]}
-              className="h-full"
-            />
+            <ChartContainer 
+              className="h-full" 
+              config={{
+                green: { color: "#22c55e" },
+                red: { color: "#ef4444" }
+              }}
+            >
+              <BarChart
+                data={completionData}
+                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis domain={[0, 100]} />
+                <Tooltip 
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      return (
+                        <ChartTooltipContent 
+                          active={active} 
+                          payload={payload}
+                          formatter={(value) => [`${value}%`]}
+                        />
+                      );
+                    }
+                    return null;
+                  }} 
+                />
+                <Legend />
+                <Bar dataKey="completed" fill="var(--color-green)" stackId="a" />
+                <Bar dataKey="incomplete" fill="var(--color-red)" stackId="a" />
+              </BarChart>
+            </ChartContainer>
           </div>
         </CardContent>
       </Card>
