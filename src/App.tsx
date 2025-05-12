@@ -17,6 +17,10 @@ import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 
 // Dashboard Pages
 import StudentDashboard from "./pages/dashboard/student/StudentDashboard";
+import StudentProfilePage from "./pages/dashboard/student/StudentProfilePage";
+import StudentSettingsPage from "./pages/dashboard/student/StudentSettingsPage";
+import StudentCoursesPage from "./pages/dashboard/student/StudentCoursesPage";
+import StudentSchedulePage from "./pages/dashboard/student/StudentSchedulePage";
 import InstructorDashboard from "./pages/dashboard/instructor/InstructorDashboard";
 import AdminDashboard from "./pages/dashboard/admin/AdminDashboard";
 
@@ -47,12 +51,20 @@ const App = () => (
             <Route path="/payment" element={<PaymentPage />} />
             <Route path="/payment-success" element={<PaymentSuccessPage />} />
             
-            {/* Protected Routes */}
+            {/* Student Dashboard Routes */}
             <Route path="/dashboard/student" element={<StudentDashboard />} />
+            <Route path="/dashboard/student/profile" element={<StudentProfilePage />} />
+            <Route path="/dashboard/student/settings" element={<StudentSettingsPage />} />
+            <Route path="/dashboard/student/courses" element={<StudentCoursesPage />} />
+            <Route path="/dashboard/student/schedule" element={<StudentSchedulePage />} />
+            
+            {/* Instructor Dashboard Routes */}
             <Route path="/dashboard/instructor" element={<InstructorDashboard />} />
             <Route path="/dashboard/instructor/courses/:courseId/edit" element={<CourseEditPage />} />
             <Route path="/dashboard/instructor/courses/:courseId/manage" element={<CourseManagePage />} />
             <Route path="/dashboard/instructor/analytics" element={<InstructorAnalyticsPage />} />
+            
+            {/* Admin Dashboard Routes */}
             <Route path="/dashboard/admin" element={<AdminDashboard />} />
             
             {/* Catch-all Route */}
