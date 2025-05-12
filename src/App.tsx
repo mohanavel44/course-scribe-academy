@@ -20,6 +20,11 @@ import StudentDashboard from "./pages/dashboard/student/StudentDashboard";
 import InstructorDashboard from "./pages/dashboard/instructor/InstructorDashboard";
 import AdminDashboard from "./pages/dashboard/admin/AdminDashboard";
 
+// Course Management Pages
+import CourseEditPage from "./pages/dashboard/instructor/CourseEditPage";
+import CourseManagePage from "./pages/dashboard/instructor/CourseManagePage";
+import InstructorAnalyticsPage from "./pages/dashboard/instructor/InstructorAnalyticsPage";
+
 // Context Providers
 import { AuthProvider } from "./context/AuthContext";
 
@@ -45,6 +50,9 @@ const App = () => (
             {/* Protected Routes */}
             <Route path="/dashboard/student" element={<StudentDashboard />} />
             <Route path="/dashboard/instructor" element={<InstructorDashboard />} />
+            <Route path="/dashboard/instructor/courses/:courseId/edit" element={<CourseEditPage />} />
+            <Route path="/dashboard/instructor/courses/:courseId/manage" element={<CourseManagePage />} />
+            <Route path="/dashboard/instructor/analytics" element={<InstructorAnalyticsPage />} />
             <Route path="/dashboard/admin" element={<AdminDashboard />} />
             
             {/* Catch-all Route */}

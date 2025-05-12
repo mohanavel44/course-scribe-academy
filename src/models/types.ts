@@ -52,3 +52,23 @@ export interface Enrollment {
   enrolledAt: string;
   updatedAt: string;
 }
+
+// Message types
+export interface Message {
+  id: string;
+  senderId: string;
+  recipientId: string;
+  courseId: string;
+  content: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface ChatThread {
+  id: string;
+  courseId: string;
+  studentId: string;
+  instructorId: string;
+  lastMessage?: Message;
+  updatedAt: string;
+}
