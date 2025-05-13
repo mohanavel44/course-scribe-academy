@@ -33,12 +33,26 @@ export default function LoginPage() {
     setIsSubmitting(true);
     
     try {
-      await login(email, password);
+      const user = await login(email, password);
       toast({
         title: "Success",
-        description: "You have successfully logged in."
+        description: `Welcome back, ${user.name}!`
       });
-      navigate('/');
+      
+      // Navigate based on user role
+      switch(user.role) {
+        case 'student':
+          navigate('/dashboard/student');
+          break;
+        case 'instructor':
+          navigate('/dashboard/instructor');
+          break;
+        case 'admin':
+          navigate('/dashboard/admin');
+          break;
+        default:
+          navigate('/');
+      }
     } catch (error: any) {
       // Error is already handled in the auth context
     } finally {

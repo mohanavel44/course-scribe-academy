@@ -55,11 +55,11 @@ export default function AdminProfilePage() {
             <div className="flex flex-col md:flex-row gap-6 items-center mb-6">
               <Avatar className="w-24 h-24">
                 <AvatarFallback className="text-2xl bg-course-blue-100 text-course-blue-600">
-                  {user?.name?.charAt(0) || 'A'}
+                  {user?.name?.charAt(0) || 'M'}
                 </AvatarFallback>
               </Avatar>
               <div>
-                <h3 className="text-xl font-semibold">{user?.name || 'Admin'}</h3>
+                <h3 className="text-xl font-semibold">{user?.name || 'Mohanavel'}</h3>
                 <p className="text-gray-500">{user?.email || 'admin@example.com'}</p>
                 <div className="mt-2">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
@@ -91,9 +91,7 @@ export default function AdminProfilePage() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="Your email"
-                      disabled
                     />
-                    <p className="text-sm text-muted-foreground">Email cannot be changed</p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone</Label>

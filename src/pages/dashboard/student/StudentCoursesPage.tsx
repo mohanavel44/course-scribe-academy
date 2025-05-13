@@ -11,12 +11,15 @@ import { BookOpen, Search, Calendar, Clock, ArrowRight } from 'lucide-react';
 import { getUserEnrolledCourses } from '@/services/courseService';
 import { useAuth } from '@/context/AuthContext';
 import { Course } from '@/models/types';
+import CourseQRCode from '@/components/dashboard/CourseQRCode';
 
 export default function StudentCoursesPage() {
   const { user } = useAuth();
   const [enrolledCourses, setEnrolledCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const [showQrCode, setShowQrCode] = useState(false);
 
   useEffect(() => {
     const fetchEnrolledCourses = async () => {
@@ -25,6 +28,9 @@ export default function StudentCoursesPage() {
       try {
         const courses = await getUserEnrolledCourses(user.id);
         setEnrolledCourses(courses);
+        if (courses.length > 0 && !selectedCourse) {
+          setSelectedCourse(courses[0]);
+        }
       } catch (error) {
         console.error("Failed to fetch enrolled courses:", error);
       } finally {
@@ -33,7 +39,7 @@ export default function StudentCoursesPage() {
     };
     
     fetchEnrolledCourses();
-  }, [user]);
+  }, [user, selectedCourse]);
 
   const filteredCourses = enrolledCourses.filter(course => 
     course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -42,6 +48,11 @@ export default function StudentCoursesPage() {
 
   // Calculate progress for each course (in a real app, this would come from the backend)
   const getRandomProgress = () => Math.floor(Math.random() * 100);
+
+  const toggleQrCode = (course: Course) => {
+    setSelectedCourse(course);
+    setShowQrCode(!showQrCode);
+  };
 
   return (
     <DashboardLayout pageTitle="My Courses">
@@ -72,6 +83,7 @@ export default function StudentCoursesPage() {
           <TabsTrigger value="all">All Courses ({enrolledCourses.length})</TabsTrigger>
           <TabsTrigger value="in-progress">In Progress</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsTrigger value="qr-code">QR Code</TabsTrigger>
         </TabsList>
         
         <TabsContent value="all" className="mt-6">
@@ -132,11 +144,20 @@ export default function StudentCoursesPage() {
                           <Clock className="h-3 w-3 mr-1" /> {course.duration} hrs
                         </span>
                       </div>
-                      <Link to={`/courses/${course.id}`}>
-                        <Button variant="outline" className="w-full flex items-center justify-center">
-                          Continue <ArrowRight className="ml-2 h-4 w-4" />
+                      <div className="flex space-x-2">
+                        <Button asChild variant="outline" className="flex-1">
+                          <Link to={`/courses/${course.id}`}>
+                            Continue <ArrowRight className="ml-2 h-4 w-4" />
+                          </Link>
                         </Button>
-                      </Link>
+                        <Button 
+                          variant="outline" 
+                          className="px-3"
+                          onClick={() => toggleQrCode(course)}
+                        >
+                          QR
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 );
@@ -170,7 +191,84 @@ export default function StudentCoursesPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="qr-code" className="mt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Course Enrollment QR</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="mb-4 text-muted-foreground">
+                    Scan this QR code to quickly access your course details or share with others.
+                  </p>
+                  
+                  {selectedCourse ? (
+                    <CourseQRCode 
+                      courseId={selectedCourse.id} 
+                      courseName={selectedCourse.title} 
+                    />
+                  ) : (
+                    <div className="text-center py-8">
+                      <p>Please select a course to view its QR code</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Courses</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="max-h-[400px] overflow-y-auto">
+                    {enrolledCourses.map((course) => (
+                      <button 
+                        key={course.id}
+                        onClick={() => setSelectedCourse(course)}
+                        className={`w-full text-left px-4 py-3 border-b hover:bg-gray-50 ${selectedCourse?.id === course.id ? 'bg-gray-50' : ''}`}
+                      >
+                        <div className="flex items-center">
+                          <div className="w-10 h-10 rounded overflow-hidden mr-3">
+                            <img 
+                              src={course.image} 
+                              alt={course.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h4 className="font-medium">{course.title}</h4>
+                            <p className="text-sm text-gray-500">
+                              {course.schedule.days.join(', ')} • {course.schedule.timeStart}
+                            </p>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
       </Tabs>
+
+      {showQrCode && selectedCourse && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="font-semibold">Course QR Code</h3>
+              <Button variant="ghost" size="icon" onClick={() => setShowQrCode(false)}>✕</Button>
+            </div>
+            <div className="p-6">
+              <CourseQRCode courseId={selectedCourse.id} courseName={selectedCourse.title} />
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

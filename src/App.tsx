@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 // Pages
 import HomePage from "./pages/HomePage";
@@ -44,7 +44,16 @@ import AdminFacultyPage from "./pages/dashboard/admin/AdminFacultyPage";
 // Context Providers
 import { AuthProvider } from "./context/AuthContext";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      retryDelay: 1000,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -87,6 +96,9 @@ const App = () => (
             <Route path="/dashboard/admin/faculty" element={<AdminFacultyPage />} />
             <Route path="/dashboard/admin/schedule" element={<AdminSchedulePage />} />
             <Route path="/dashboard/admin/analytics" element={<InstructorAnalyticsPage />} /> {/* Reusing instructor analytics */}
+            
+            {/* Redirect /admin to /dashboard/admin for convenience */}
+            <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
             
             {/* Catch-all Route */}
             <Route path="*" element={<NotFound />} />
