@@ -42,7 +42,7 @@ export default function Navbar() {
               <Link to="/" className="flex items-center">
                 <BookOpen className="h-8 w-8 text-course-blue-600" />
                 <span className="ml-2 font-poppins text-xl font-bold text-gray-900 dark:text-white">
-                  CourseScribe
+                  OCRS
                 </span>
               </Link>
             </div>

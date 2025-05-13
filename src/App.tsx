@@ -21,13 +21,25 @@ import StudentProfilePage from "./pages/dashboard/student/StudentProfilePage";
 import StudentSettingsPage from "./pages/dashboard/student/StudentSettingsPage";
 import StudentCoursesPage from "./pages/dashboard/student/StudentCoursesPage";
 import StudentSchedulePage from "./pages/dashboard/student/StudentSchedulePage";
+
+// Instructor Dashboard Pages
 import InstructorDashboard from "./pages/dashboard/instructor/InstructorDashboard";
-import AdminDashboard from "./pages/dashboard/admin/AdminDashboard";
+import InstructorProfilePage from "./pages/dashboard/admin/AdminProfilePage"; // Reusing admin profile for now
+import InstructorSettingsPage from "./pages/dashboard/admin/AdminSettingsPage"; // Reusing admin settings for now
+import InstructorSchedulePage from "./pages/dashboard/admin/AdminSchedulePage"; // Reusing admin schedule for now
 
 // Course Management Pages
 import CourseEditPage from "./pages/dashboard/instructor/CourseEditPage";
 import CourseManagePage from "./pages/dashboard/instructor/CourseManagePage";
 import InstructorAnalyticsPage from "./pages/dashboard/instructor/InstructorAnalyticsPage";
+
+// Admin Dashboard Pages
+import AdminDashboard from "./pages/dashboard/admin/AdminDashboard";
+import AdminProfilePage from "./pages/dashboard/admin/AdminProfilePage";
+import AdminSettingsPage from "./pages/dashboard/admin/AdminSettingsPage";
+import AdminCoursesPage from "./pages/dashboard/admin/AdminCoursesPage";
+import AdminSchedulePage from "./pages/dashboard/admin/AdminSchedulePage";
+import AdminFacultyPage from "./pages/dashboard/admin/AdminFacultyPage";
 
 // Context Providers
 import { AuthProvider } from "./context/AuthContext";
@@ -60,12 +72,21 @@ const App = () => (
             
             {/* Instructor Dashboard Routes */}
             <Route path="/dashboard/instructor" element={<InstructorDashboard />} />
+            <Route path="/dashboard/instructor/profile" element={<InstructorProfilePage />} />
+            <Route path="/dashboard/instructor/settings" element={<InstructorSettingsPage />} />
+            <Route path="/dashboard/instructor/schedule" element={<InstructorSchedulePage />} />
             <Route path="/dashboard/instructor/courses/:courseId/edit" element={<CourseEditPage />} />
             <Route path="/dashboard/instructor/courses/:courseId/manage" element={<CourseManagePage />} />
             <Route path="/dashboard/instructor/analytics" element={<InstructorAnalyticsPage />} />
             
             {/* Admin Dashboard Routes */}
             <Route path="/dashboard/admin" element={<AdminDashboard />} />
+            <Route path="/dashboard/admin/profile" element={<AdminProfilePage />} />
+            <Route path="/dashboard/admin/settings" element={<AdminSettingsPage />} />
+            <Route path="/dashboard/admin/courses" element={<AdminCoursesPage />} />
+            <Route path="/dashboard/admin/faculty" element={<AdminFacultyPage />} />
+            <Route path="/dashboard/admin/schedule" element={<AdminSchedulePage />} />
+            <Route path="/dashboard/admin/analytics" element={<InstructorAnalyticsPage />} /> {/* Reusing instructor analytics */}
             
             {/* Catch-all Route */}
             <Route path="*" element={<NotFound />} />

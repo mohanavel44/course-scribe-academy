@@ -12,6 +12,8 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
+  phone?: string;
+  bio?: string;
 }
 
 // Auth context interface
@@ -34,21 +36,27 @@ export const mockUsers = [
     email: "student@example.com",
     password: "password123",
     name: "Test Student",
-    role: "student" as UserRole
+    role: "student" as UserRole,
+    phone: "555-123-4567",
+    bio: "I am a student interested in learning new skills."
   },
   {
     id: "2",
     email: "instructor@example.com",
     password: "password123",
     name: "Test Instructor",
-    role: "instructor" as UserRole
+    role: "instructor" as UserRole,
+    phone: "555-987-6543",
+    bio: "Experienced instructor with 5+ years of teaching."
   },
   {
     id: "3",
     email: "admin@example.com",
     password: "password123",
     name: "Test Admin",
-    role: "admin" as UserRole
+    role: "admin" as UserRole,
+    phone: "555-555-5555",
+    bio: "System administrator responsible for platform management."
   }
 ];
 

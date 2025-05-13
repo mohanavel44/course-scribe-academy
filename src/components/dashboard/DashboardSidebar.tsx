@@ -12,7 +12,9 @@ import {
   Calendar, 
   User, 
   Settings, 
-  LogOut 
+  LogOut,
+  Users,
+  BarChart2
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
@@ -91,9 +93,19 @@ export default function DashboardSidebar({ sidebarOpen }: SidebarProps) {
           icon: BookOpen
         },
         {
-          name: "Users",
-          href: "/dashboard/admin/users",
-          icon: User
+          name: "Faculty",
+          href: "/dashboard/admin/faculty",
+          icon: Users
+        },
+        {
+          name: "Schedule",
+          href: "/dashboard/admin/schedule",
+          icon: Calendar
+        },
+        {
+          name: "Analytics",
+          href: "/dashboard/admin/analytics",
+          icon: BarChart2
         }
       ];
     }
