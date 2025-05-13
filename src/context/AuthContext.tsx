@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 // Define user roles
 export type UserRole = "student" | "instructor" | "admin";
@@ -53,7 +53,7 @@ export const mockUsers = [
     id: "3",
     email: "admin@example.com",
     password: "password123",
-    name: "Test Admin",
+    name: "Mohanavel",
     role: "admin" as UserRole,
     phone: "555-555-5555",
     bio: "System administrator responsible for platform management."
@@ -133,7 +133,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         email,
         password,
         name,
-        role
+        role,
+        phone: "", // Adding default empty values to fix the TypeScript error
+        bio: ""    // Adding default empty values to fix the TypeScript error
       };
       
       // Add to mock users (this would be done on the server in a real app)

@@ -19,7 +19,7 @@ export default function DashboardHeader({ sidebarOpen, setSidebarOpen }: Dashboa
               <Link to="/" className="flex items-center">
                 <BookOpen className="h-8 w-8 text-course-blue-600" />
                 <span className="ml-2 font-poppins text-xl font-bold text-gray-900 dark:text-white">
-                  CourseScribe
+                  Online Course Reservation System
                 </span>
               </Link>
             </div>

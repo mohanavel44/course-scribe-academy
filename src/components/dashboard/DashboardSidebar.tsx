@@ -1,6 +1,6 @@
 
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,9 +14,12 @@ import {
   Settings, 
   LogOut,
   Users,
-  BarChart2
+  BarChart2,
+  DollarSign,
+  FileText
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -25,6 +28,7 @@ interface SidebarProps {
 export default function DashboardSidebar({ sidebarOpen }: SidebarProps) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Handle logout
   const handleLogout = () => {
@@ -64,6 +68,11 @@ export default function DashboardSidebar({ sidebarOpen }: SidebarProps) {
           name: "Schedule",
           href: "/dashboard/student/schedule",
           icon: Calendar
+        },
+        {
+          name: "Payments",
+          href: "/dashboard/student/payments",
+          icon: DollarSign
         }
       ];
     }
@@ -77,9 +86,19 @@ export default function DashboardSidebar({ sidebarOpen }: SidebarProps) {
           icon: BookOpen
         },
         {
-          name: "Schedule",
+          name: "Teaching Schedule",
           href: "/dashboard/instructor/schedule",
           icon: Calendar
+        },
+        {
+          name: "Earnings",
+          href: "/dashboard/instructor/earnings",
+          icon: DollarSign
+        },
+        {
+          name: "Student Performance",
+          href: "/dashboard/instructor/analytics",
+          icon: BarChart2
         }
       ];
     }
@@ -93,19 +112,24 @@ export default function DashboardSidebar({ sidebarOpen }: SidebarProps) {
           icon: BookOpen
         },
         {
-          name: "Faculty",
+          name: "Faculty Management",
           href: "/dashboard/admin/faculty",
           icon: Users
         },
         {
-          name: "Schedule",
+          name: "Schedule Management",
           href: "/dashboard/admin/schedule",
           icon: Calendar
         },
         {
-          name: "Analytics",
+          name: "System Analytics",
           href: "/dashboard/admin/analytics",
           icon: BarChart2
+        },
+        {
+          name: "Financial Reports",
+          href: "/dashboard/admin/finance",
+          icon: DollarSign
         }
       ];
     }
@@ -139,15 +163,27 @@ export default function DashboardSidebar({ sidebarOpen }: SidebarProps) {
             </CardContent>
           </Card>
           
+          {/* Dashboard Title */}
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold px-3">Online Course Reservation System</h2>
+          </div>
+          
           {/* Navigation Links */}
           <nav className="space-y-1">
             {navLinks.map((link, index) => {
               const Icon = link.icon;
+              const isActive = location.pathname === link.href;
+              
               return (
                 <Link 
                   key={index}
                   to={link.href}
-                  className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-course-blue-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                  className={cn(
+                    "flex items-center px-3 py-2 rounded-md text-sm font-medium",
+                    isActive 
+                      ? "bg-course-blue-50 text-course-blue-600 dark:bg-gray-700 dark:text-white" 
+                      : "text-gray-700 hover:bg-gray-100 hover:text-course-blue-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
+                  )}
                   onClick={() => {
                     if (window.innerWidth < 768) {
                       // This will be handled by the parent component
@@ -162,6 +198,28 @@ export default function DashboardSidebar({ sidebarOpen }: SidebarProps) {
           </nav>
           
           <Separator className="my-4" />
+          
+          {/* Role-Specific Info Section */}
+          {user?.role === "admin" && (
+            <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+              <h4 className="font-medium text-blue-700 mb-1">Admin Dashboard</h4>
+              <p className="text-xs text-blue-600">Full system access enabled</p>
+            </div>
+          )}
+          
+          {user?.role === "instructor" && (
+            <div className="mb-4 p-3 bg-green-50 rounded-lg">
+              <h4 className="font-medium text-green-700 mb-1">Instructor Dashboard</h4>
+              <p className="text-xs text-green-600">Course and student management</p>
+            </div>
+          )}
+          
+          {user?.role === "student" && (
+            <div className="mb-4 p-3 bg-amber-50 rounded-lg">
+              <h4 className="font-medium text-amber-700 mb-1">Student Dashboard</h4>
+              <p className="text-xs text-amber-600">Course enrollment and learning</p>
+            </div>
+          )}
           
           {/* Logout Button */}
           <Button 
